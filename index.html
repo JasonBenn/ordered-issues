@@ -13,12 +13,6 @@
     {{outlet}}
   </script>
 
-  <script type="text/x-handlebars" data-template-name="index">
-    {{#link-to 'issues.index'}}
-    Hi
-    {{/link-to}}
-  </script>
-
   <script type="text/x-handlebars" data-template-name="issues/index">
     <table>
       <thead>
@@ -31,39 +25,37 @@
         </tr>
       </thead>
       <tbody>
-      {{#each issue in model itemController='issue'}}
-        <tr>
-          <td>1</td>
-          <td {{bind-attr class='issue.categoryClass'}}>{{issue.category}}</td>
-          <td>{{issue.title}}</td>
-          <td>
-            <select name="rating">
-              <option value=0 selected>--</option>
-              <option value=1>1</option>
-              <option value=2>2</option>
-              <option value=3>3</option>
-              <option value=4>4</option>
-            </select>
-          </td>
-          <td>
-            <select name="rating">
-              <option value=0 selected>--</option>
-              <option value=1>1</option>
-              <option value=2>2</option>
-              <option value=3>3</option>
-              <option value=4>4</option>
-            </select>
-          </td>
-        </tr>
+      {{#each issue in sortedContent itemController='issueIndex'}}
+        {{view 'issue' tagName='tr'}}
       {{/each}}
       </tbody>
     </table>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="issue">
+    <td>{{issue.score}}</td>
+    <td {{bind-attr class='issue.categoryClass'}}>
+      {{input type='text' value=issue.category}}
+    </td>
+    <td>{{issue.title}}</td>
+    <td>
+      {{input type='number' value=issue.cost}}
+    </td>
+    <td>
+      {{input type='number' value=issue.benefit}}
+    </td>
   </script>
 
   <script src="js/libs/jquery-1.10.2.js"></script>
   <script src="js/libs/handlebars-v2.0.0.js"></script>
   <script src="js/libs/ember-1.9.1.js"></script>
   <script src="js/libs/ember-data.js"></script>
+
+  <!-- Firebase -->
+  <script src="https://cdn.firebase.com/js/client/2.1.0/firebase.js"></script>
+  <!-- EmberFire -->
+  <script src="https://cdn.firebase.com/libs/emberfire/1.3.1/emberfire.min.js"></script>
+
   <script src="js/app.js"></script>
   <!-- to activate the test runner, add the "?test" query string parameter -->
   <script src="tests/runner.js"></script>

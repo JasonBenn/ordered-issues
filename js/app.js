@@ -2,6 +2,10 @@ App = Ember.Application.create();
 
 App.ApplicationAdapter = DS.FixtureAdapter;
 
+// App.ApplicationAdapter = DS.FirebaseAdapter.extend({
+//   firebase: new Firebase('https://resplendent-torch-2368.firebaseIO.com/web/bindings/ember/')
+// })
+
 App.Router.reopen({
   location: 'history'
 });
@@ -28,15 +32,34 @@ App.IssuesIndexRoute = Ember.Route.extend({
   }
 });
 
-App.IssueController = Ember.ObjectController.extend({
+// try managing a collection myself. use SortableMixin.sortBy to sort it.
+App.IssuesIndexController = Ember.ArrayController.extend({
+  sorting: ['score:desc'],
+  sortedContent: Em.computed.sort('@this', 'sorting'),
+  itemController: 'issueIndex'
+});
+
+App.IssueIndexController = Ember.ObjectController.extend({
   category: function() {
     return this.model.get('category') || ''
   }.property(),
 
   categoryClass: function() {
     return this.get('category').toLowerCase();
-  }.property('category')
+  }.property('category'),
+
+  score: function() {
+    var score = this.get('benefit') - this.get('cost');
+    return isNaN(score) ? undefined : score;
+  }.property('benefit', 'cost')
 });
+
+App.IssueView = Ember.View.extend({
+  templateName: 'issue',
+  focusOut: function(e) {
+    // save the model, trigger a sort.
+  }
+})
 
 App.IssueRating = DS.Model.extend({
   "githubIssueID": DS.attr('string'),
